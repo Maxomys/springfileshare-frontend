@@ -1,4 +1,3 @@
-import axios from "axios";
 import api from "./api"
 
 const getAllFiles = async function() {
@@ -18,9 +17,14 @@ const registerNewUser = function(user) {
   api.post('/register', user);
 }
 
+const postNewLink = function(link) {
+  api.post('/link', link);
+}
+
 const DataService = {
   getAllFiles,
-  registerNewUser
+  registerNewUser,
+  postNewLink
 }
 
 export default DataService;

@@ -20,17 +20,22 @@ const FileList = () => {
   const [loading, setLoading] = useState(true);
   const [linksModalOpen, setLinksModalOpen] = useState(false);
   const [newLinkModalOpen, setNewLinkModalOpen] = useState(false);
+  const [linksInModal, setLinksInModal] = useState([]);
+  const [newLinkFileId, setNewLinkFileId] = useState(null);
+  const [reload, setReload] = useState(false);
   
   useEffect(() => {
     loadFiles();
-  }, []);
+    setReload(false);
+  }, [reload]);
 
   async function loadFiles() {
     setFiles(await DataService.getAllFiles());
     setLoading(false);
   }
 
-  function handleOpenLinks() {
+  function handleOpenLinks(file) {
+    setLinksInModal(file.links);
     setLinksModalOpen(true);
   }
 
@@ -38,12 +43,14 @@ const FileList = () => {
     setLinksModalOpen(false);
   }
 
-  function handleOpenNewLink() {
+  function handleOpenNewLink(file) {
+    setNewLinkFileId(file.id);
     setNewLinkModalOpen(true);
   }
 
   function handleCloseNewLink() {
     setNewLinkModalOpen(false);
+    setReload(true);
   }
 
   const useStyles = makeStyles({
@@ -110,19 +117,19 @@ const FileList = () => {
           </div>
           <div className={classes.linkButton}>
             <Button
-              onClick={handleOpenNewLink}
+              onClick={() => handleOpenNewLink(file)}
               variant='contained'
               color='primary'
               startIcon={<AddIcon/>}
             >
               New Link
             </Button>
-            <Button onClick={handleOpenLinks} variant="contained">
+            <Button onClick={() => handleOpenLinks(file)} variant="contained">
               Links
             </Button>
             
-            <LinksModal open={linksModalOpen} handleClose={handleCloseLinks} links={file.links}/>
-            <NewLinkModal open={newLinkModalOpen} handleClose={handleCloseNewLink}/>
+            <LinksModal open={linksModalOpen} handleClose={handleCloseLinks} links={linksInModal}/>
+            <NewLinkModal open={newLinkModalOpen} handleClose={handleCloseNewLink} fileId={newLinkFileId}/>
           </div>
 
           <div className={classes.cardLinks}>

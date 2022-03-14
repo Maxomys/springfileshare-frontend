@@ -44,6 +44,7 @@ const LinksModal = ({open, handleClose, links}) => {
             {links.map(link => (
               <ListItem key={link.id}>
                 <ListItemText primary={link.url}></ListItemText>
+                <ListItemText>Remaining uses: {link.remainingUses}</ListItemText>
                 <ListItemSecondaryAction>
                   <IconButton>
                     <DeleteForeverIcon/>

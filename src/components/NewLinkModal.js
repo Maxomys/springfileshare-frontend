@@ -1,15 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Icon, makeStyles, Modal, TextField } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import DataService from "../services/DataService";
 
-const NewLinkModal = ({open, handleClose}) => {
+const NewLinkModal = ({open, handleClose, fileId}) => {
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [link, setLink] = useState({
+    storedFileId: fileId,
+    remainingUses: null,
+    expirationTime: ''
+  });
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.target.value);
+  useEffect(() => {
+    setLink(prevState => ({...prevState, storedFileId: fileId}));
+  }, [fileId]);
+
+  function handleDateChange(event) {
+    setLink(prevState => ({...prevState, expirationTime: event.target.value}));
   };
+
+  function handleNumberChange(event) {
+    setLink(prevState => ({...prevState, remainingUses: event.target.value}));
+  }
+
+  function addLink(event) {
+    DataService.postNewLink(link);
+    handleClose();
+  }
 
   const useStyles = makeStyles({
     modal: {
@@ -47,25 +65,32 @@ const NewLinkModal = ({open, handleClose}) => {
     >
       <Card className={classes.card}>
         <div className={classes.cardTop}>
-          <form className={classes.container} noValidate>
-            <TextField
-              id="datetime-local"
-              label="Next appointment"
-              type="datetime-local"
-              defaultValue="2017-05-24T10:30"
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(event) => handleDateChange(event)}
-            />
-          </form>
+          <TextField
+            id="datetime-local"
+            label="Expiration date"
+            type="datetime-local"
+            defaultValue="2017-05-24T10:30"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={event => handleDateChange(event)}
+          />
+          <TextField
+            id="standard-number"
+            label="Number of uses"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={event => handleNumberChange(event)}
+          />
           <Button
             variant="contained"
             color="default"
             className={classes.button}
             startIcon={<AddIcon/>}
-            onClick
+            onClick={event => addLink(event)}
           >
             Add Link
           </Button>
