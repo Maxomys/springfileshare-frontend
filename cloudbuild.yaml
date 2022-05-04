@@ -1,0 +1,33 @@
+steps:
+  - name: node
+    entrypoint: npm
+    args: ['install']
+  
+  # prod build
+  - name: node
+    entrypoint: npm
+    args: ['run', 'build']
+    env:
+    - 'REACT_APP_SERVER_URL=$_SERVER_URL'
+  
+  # build the container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/fileshare-frontend:$COMMIT_SHA', '--build-arg=BUILD_FOLDER=build', '.']
+
+  # push the container image to container registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/fileshare-frontend:$COMMIT_SHA']
+
+  # deploy to cloud run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'fileshare-frontend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/fileshare-frontend:$COMMIT_SHA'
+      - '--region'
+      - 'europe-north1'
+images:
+  - 'gcr.io/$PROJECT_ID/fileshare-frontend:$COMMIT_SHA'

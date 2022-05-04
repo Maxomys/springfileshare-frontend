@@ -1,9 +1,17 @@
 import axios from "axios";
 import TokenService from "./TokenService";
 
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = getBaseUrl();
 const LOGIN_URL = '/login';
 const REFRESH_TOKEN_URL = '/token/refresh';
+
+function getBaseUrl() {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:8080/api';
+  } else {
+    return process.env.REACT_APP_SERVER_URL;
+  }
+}
 
 const instance = axios.create({
   baseURL: BASE_URL,
