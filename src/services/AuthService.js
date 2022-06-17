@@ -1,29 +1,35 @@
-import axios from 'axios'
-import api from './api'
-import TokenService from './TokenService'
+import axios from 'axios';
+import TokenService from './TokenService';
 
-const LOGIN_URL = 'http://localhost:8080/api/login'
+const LOGIN_URL = 'http://localhost:8080/api/login';
 
-const login = function(username, password) {
-  axios.post(LOGIN_URL, {}, {
-    params: {
-      'username': username,
-      'password': password
-    }
-  }).then(response => {
+async function login(username, password) {
+  
+  try {
+    let response = await axios.post(LOGIN_URL, {}, {
+      params: {
+        'username': username,
+        'password': password
+      }
+    });
+    
     if (response.data.accessToken && response.data.refreshToken) {
       TokenService.setAccessToken(response.data.accessToken);
       TokenService.setRefreshToken(response.data.refreshToken);
-
-
     }
-  }).catch(error => {
+  } catch (error) {
     console.log(error);
-  })
+    return error;
+  }
+}
+
+function logout() {
+  TokenService.removeTokens();
 }
 
 const AuthService = {
-  login
+  login,
+  logout
 }
 
 export default AuthService;

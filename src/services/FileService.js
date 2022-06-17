@@ -21,7 +21,10 @@ const download = function(fileId) {
     responseType: 'blob'
   })
   .then(response => {
+    console.log(response);
     if (!response.headers.filename) {
+      console.log('filename header: ' + response.headers.filename);
+      console.log('keep alive header: ' + response.headers['Keep-Alive']);
       return Promise.reject();
     }
     

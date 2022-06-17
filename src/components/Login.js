@@ -7,8 +7,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useHistory } from 'react-router';
 import AuthService from '../services/AuthService';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
@@ -16,16 +16,18 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const loginSubmit = function(event) {
     event.preventDefault();
     sendLoginRequest(email, password);
   }
 
-  function sendLoginRequest(email, password) {
-    AuthService.login(email, password);
-    history.push('/');
+  async function sendLoginRequest(email, password) {
+    let error = await AuthService.login(email, password);
+    if (!error) {
+      navigate('/');
+    }
   }
 
   const useStyles = makeStyles((theme) => ({

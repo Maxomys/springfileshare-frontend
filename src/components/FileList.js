@@ -101,7 +101,7 @@ const FileList = () => {
 
   return (
     <Container maxWidth='sm'>
-      {files ? files.map(file => (
+      {files && files.map(file => (
         <Card className={classes.card} key={file.id}>
           <div className={classes.cardTop}>
             <Avatar>
@@ -136,7 +136,7 @@ const FileList = () => {
             
           </div>
         </Card>
-      )) : null}
+      ))}
     </Container>
   );
 

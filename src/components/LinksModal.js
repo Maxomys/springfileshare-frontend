@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from '@material-ui/core/Modal';
 import { IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, makeStyles, Card, Button} from "@material-ui/core";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 const LinksModal = ({open, handleClose, links}) => {
   
@@ -20,10 +21,8 @@ const LinksModal = ({open, handleClose, links}) => {
       display: 'flex',
       flexDirection: 'column'
     },
-    cardTop: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center'
+    list: {
+      width: '100%'
     }
   })
 
@@ -39,21 +38,21 @@ const LinksModal = ({open, handleClose, links}) => {
       aria-describedby="simple-modal-description"
     >
       <Card className={classes.card}>
-        <div className={classes.cardTop}>
-          <List>
-            {links.map(link => (
-              <ListItem key={link.id}>
-                <ListItemText primary={link.url}></ListItemText>
-                <ListItemText>Remaining uses: {link.remainingUses}</ListItemText>
-                <ListItemSecondaryAction>
-                  <IconButton>
-                    <DeleteForeverIcon/>
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        </div>
+        <List className={classes.list}>
+          {links.map(link => (
+            <ListItem key={link.id} align-items='flex-end'>
+              <ListItemText primary={link.url} secondary={'Remaining uses: ' + link.remainingUses} />
+              <ListItemSecondaryAction>
+                <IconButton edge='start'>
+                  <FileCopyIcon/>
+                </IconButton>
+                <IconButton edge='end'>
+                  <DeleteForeverIcon/>
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
       </Card>
     </Modal>
 

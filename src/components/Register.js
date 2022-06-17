@@ -1,6 +1,6 @@
 import { Button, Container, makeStyles, TextField, Typography } from "@material-ui/core";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from 'react-router-dom';
 import DataService from "../services/DataService";
 
 const Register = () => {
@@ -11,11 +11,11 @@ const Register = () => {
     email: ''
   });
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const onRegister = function() {
     DataService.registerNewUser(user);
-    history.push("/");
+    navigate("/");
   }
 
   const useStyles = makeStyles(() => ({

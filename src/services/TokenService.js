@@ -22,6 +22,11 @@ const getUsername = function() {
   }
 }
 
+const removeTokens = function() {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+}
+
 function parseJwt(token) {
   if (!token) { return; }
   const base64Url = token.split('.')[1];
@@ -34,7 +39,8 @@ const TokenService = {
   setAccessToken,
   getRefreshToken,
   setRefreshToken,
-  getUsername
+  getUsername,
+  removeTokens
 }
 
 export default TokenService;
